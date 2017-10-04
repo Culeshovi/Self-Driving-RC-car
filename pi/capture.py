@@ -13,5 +13,5 @@ while(True):
         break
 
 # When everything done, release the capture
-cap.releas
+cap.release() 
 cv2.destroyAllWindows()
