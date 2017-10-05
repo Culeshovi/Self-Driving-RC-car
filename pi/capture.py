@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import os
-cap = cv2.VideoCapture(1) #If webcam does'nt work set it to -1 or 1
+cap = cv2.VideoCapture(0) #If webcam does'nt work set it to -1 or 1
 count=0
 path_output_dir='\data'
 while(True):
