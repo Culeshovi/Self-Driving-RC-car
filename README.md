@@ -7,6 +7,6 @@
 * Arduino UNO R3
 * Raspberry Pi 3 Model B
 * Ultrasonic Sensor HC-SR04
-* Jumper wires of all kinds
+* Jumper wires
 * L293d Motor Driver
 * Webcam
