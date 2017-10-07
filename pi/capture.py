@@ -16,5 +16,10 @@ while(True):
 	t = (e2 - e1)/cv2.getTickFrequency()
 	print (1.0/t)
 # When everything done, release the capture
+<<<<<<< HEAD
 cap.release()
 cv2.destroyAllWindows()
+=======
+cap.release() 
+cv2.destroyAllWindows()
+>>>>>>> 2a95922f2b6071073658b482eb57a97bad1ba33e
