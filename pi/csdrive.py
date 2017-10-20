@@ -1,3 +1,8 @@
+import socket               # Import socket module
+import cv2
+import numpy as np
+import time
+import pickle
 import RPi.GPIO as GPIO ## Import GPIO library
 import time
 import cv2
@@ -47,15 +52,22 @@ def forward():
     GPIO.output(f_motor2, False)
 
     time.sleep(0.1)
-    
 
-def main():
-    selfcar=True
-    k=-1
-    while (selfcar):
-        if (k==0):
+s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)         # Create a socket object
+host = socket.gethostname() # ipManSaysHi...Awwwwww
+port = 5555               # Reserve a port for your service.
+s.connect((host, port))
+cap=cv2.VideoCapture(0)
+while True:
+	ret,frame=cap.read()
+	rval,imgencode=cv2.imencode(".jpg",frame,[1,90])
+	data1=pickle.dumps(imgencode) #Pickkkkkyyyyyyyyyyyyyyy..........Yahoooooooooooooooooo
+	s.sendall(data1)
+	k=s.recv(1024)
+	k=k.decode('utf-8')
+	if (k=='R'):
             right()
-        elif (k==1):
+        elif (k=='L'):
             left()
         elif (isstop()):
             GPIO.output(ardystop,True)
@@ -63,9 +75,9 @@ def main():
             GPIO.output(ardystop,False)
             forward()
             print("Partttyyyyy")
-    
-            
     GPIO.cleanup()
+cap.release()
+s.close()
 
-if __name__ == '__main__':
-    main()
+
+
