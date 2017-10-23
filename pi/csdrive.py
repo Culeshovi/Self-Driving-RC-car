@@ -4,8 +4,6 @@ import numpy as np
 import time
 import pickle
 import RPi.GPIO as GPIO ## Import GPIO library
-import time
-import cv2
 import caret
 delay = 5
 
@@ -14,7 +12,8 @@ f_motor1 = 13
 f_motor2 = 15
 f_motor_Vcc = 2
 f_motor_G = 6
-ardystop=32
+ardystop=36
+r_motor=32
 
 GPIO.setwarnings(False) ## Ignores GPIO Warnings
 GPIO.setmode(GPIO.BOARD) ## Use board pin numbering
@@ -22,36 +21,35 @@ GPIO.setmode(GPIO.BOARD) ## Use board pin numbering
 GPIO.setup(f_motor1, GPIO.OUT)
 GPIO.setup(f_motor2, GPIO.OUT)
 GPIO.setup(ardystop, GPIO.OUT)
-
-def getimage():
-    #Getting Image from webcam
-    frame=caret.capy()
+GPIO.setup(r_motor,GPIO.OUT)
+pwm=GPIO.PWM(32,100)
 
 def isstop():
-    ardy=False
-    getimage()
-    #Junior's Code
-    GPIO.output(ardystop, ardy)
-    pass
+    GPIO.output(r_motor,False)
+    time.sleep(0.1)
     
 def right():
-    
+    pwm.start(60)
     GPIO.output(f_motor1, True)
     GPIO.output(f_motor2, False)
-
+    GPIO.output(r_motor, True)
     time.sleep(0.1)
+    pwm.stop()
 
 def left():
-
+    pwm.start(60)
     GPIO.output(f_motor1, False)
     GPIO.output(f_motor2, True)
-
+    GPIO.output(r_motor, True)
     time.sleep(0.1)
+    pwm.stop()
 def forward():
+    pwm.start(40)
     GPIO.output(f_motor1, False)
     GPIO.output(f_motor2, False)
-
+    GPIO.output(r_motor, True)
     time.sleep(0.1)
+    pwm.stop()
 
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)         # Create a socket object
 host = socket.gethostname() # ipManSaysHi...Awwwwww
@@ -65,16 +63,16 @@ while True:
 	s.sendall(data1)
 	k=s.recv(1024)
 	k=k.decode('utf-8')
-	if (k=='R'):
-            right()
-        elif (k=='L'):
-            left()
-        elif (isstop()):
-            GPIO.output(ardystop,True)
-        else:
-            GPIO.output(ardystop,False)
-            forward()
-            print("Partttyyyyy")
+	if (k=='D'):
+        right()
+    elif (k=='A'):
+        left()
+    elif (k=='W'):
+        forward()
+    else:
+        isstop()
+            
+            
     GPIO.cleanup()
 cap.release()
 s.close()
