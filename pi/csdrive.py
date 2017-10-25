@@ -4,58 +4,67 @@ import numpy as np
 import time
 import pickle
 import RPi.GPIO as GPIO ## Import GPIO library
-import caret
-delay = 5
 
 
-f_motor1 = 13
+# Digital output pins for front motor
+f_motor1 = 13 
 f_motor2 = 15
+
 f_motor_Vcc = 2
 f_motor_G = 6
-ardystop=36
-r_motor=32
+
+# Digital output pins for rear motor
+r_motor1 = 16
+r_motor2 = 18
 
 GPIO.setwarnings(False) ## Ignores GPIO Warnings
 GPIO.setmode(GPIO.BOARD) ## Use board pin numbering
 
 GPIO.setup(f_motor1, GPIO.OUT)
 GPIO.setup(f_motor2, GPIO.OUT)
-GPIO.setup(ardystop, GPIO.OUT)
-GPIO.setup(r_motor,GPIO.OUT)
-pwm=GPIO.PWM(32,100)
+
+GPIO.setup(r_motor1, GPIO.OUT)
+GPIO.setup(r_motor2, GPIO.OUT)
+
 
 def isstop():
-    GPIO.output(r_motor,False)
+    GPIO.output(r_motor1,True)
+    GPIO.output(r_motor2,True)
+
     time.sleep(0.1)
     
 def right():
-    pwm.start(60)
-    GPIO.output(f_motor1, True)
+    GPIO.output(f_motor1, True) # Front motor right
     GPIO.output(f_motor2, False)
-    GPIO.output(r_motor, True)
+
+    GPIO.output(r_motor1, True) # Rear motor front
+    GPIO.output(r_motor2, False)
+
     time.sleep(0.1)
-    pwm.stop()
 
 def left():
-    pwm.start(60)
-    GPIO.output(f_motor1, False)
+    GPIO.output(f_motor1, False) # Front motor left
     GPIO.output(f_motor2, True)
-    GPIO.output(r_motor, True)
+
+    GPIO.output(r_motor1, True) # Rear motor move front
+    GPIO.output(r_motor2, False)
+
     time.sleep(0.1)
-    pwm.stop()
+
 def forward():
-    pwm.start(40)
-    GPIO.output(f_motor1, False)
+    GPIO.output(f_motor1, False) # Front motor neutral
     GPIO.output(f_motor2, False)
-    GPIO.output(r_motor, True)
+
+    GPIO.output(r_motor1, True) # Rear motor move front
+    GPIO.output(r_motor2, False)
+
     time.sleep(0.1)
-    pwm.stop()
 
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)         # Create a socket object
-host = socket.gethostname() # ipManSaysHi...Awwwwww
-port = 5555               # Reserve a port for your service.
+host = socket.gethostname() # ipManSaysHi...Awwwwww, now lets have sex
+port = 5555               # Reserve a port for your souerviccsse.
 s.connect((host, port))
-cap=cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0)
 while True:
 	ret,frame=cap.read()
 	rval,imgencode=cv2.imencode(".jpg",frame,[1,90])
@@ -76,6 +85,5 @@ while True:
     GPIO.cleanup()
 cap.release()
 s.close()
-
 
 
