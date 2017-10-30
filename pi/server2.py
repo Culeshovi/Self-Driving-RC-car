@@ -11,7 +11,7 @@ s.bind((host, port))        # Bind to the port
 s.listen(5)
 count=0  
 c, addr = s.accept()
-path_output_dir='/home/culeshovi/Desktop/'     # Establish connection with client.
+path_output_dir=os.path.expanduser('/home/culeshovi/Desktop/New')     # Establish connection with client.
 print ('Got connection from', addr)
  # Now wait for client connection.
 while True:
