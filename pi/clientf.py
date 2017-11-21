@@ -1,30 +1,22 @@
-import socket               # Import socket module
-import cv2
-import numpy as np
-import time
-import pickle
+import socket
+import pygame
 
-s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)         # Create a socket object
-host = socket.gethostname() # ipManSaysHi...Awwwwww
-port = 5555             # Reserve a port for your service.
-s.connect((host, port))
+host=socket.gethostname()
+port=5555
 
-def capture():
-	cap=cv2.VideoCapture(0)
-	ret,frame=cap.read()
-	time.sleep(2)
-	rval,imgencode=cv2.imencode(".jpg",frame,[1,90])
-	data1=pickle.dumps(imgencode)
-	s.sendall(data1)
-	cap.release()
+screen = pygame.display.set_mode((640,480))
 
-while True:
-	capture()
-	k=s.recv(1024)
-	#time.sleep(4)
-	print (k.decode('utf-8'))
-
-s.close()
-
-
-
+while 1:
+    s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind((host,port))
+    s.listen(1)
+    conn, addr = s.accept()
+    message = []
+    while True:
+        d = conn.recv(1024*1024)
+        if not d: break
+        else: message.append(d)
+    data = ''.join(message)
+    image = pygame.image.fromstring(data,(640,480),"RGB")
+    screen.blit(image,(0,0))
+    pygame.display.update()
